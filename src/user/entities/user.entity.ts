@@ -1,15 +1,19 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
 
 
-@Entity({tableName : 'users'})
+@Entity({tableName : 'usuarios'})
 export class User {
     @PrimaryKey()
     id!:number;
 
     @Property()
-    username!:string;
+    nome!:string;
 
     @Property()
-    lastname!:string;
+    email!:string;
+
+    @Property()
+    nivel_acesso!:string;
+
 }
 

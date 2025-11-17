@@ -10,7 +10,7 @@ const mikroOrmConfig: Options<PostgreSqlDriver> = {
   port: 5432,
   user: 'postgres',
   password: 'PostScan',
-  dbName: 'postgres',
+  dbName: 'scanmove',
 
   // entidades em JS (build)
   entities: ['./dist/**/*.entity.js'],

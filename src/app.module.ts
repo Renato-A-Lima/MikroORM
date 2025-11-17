@@ -8,7 +8,7 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    MikroOrmModule.forRoot(mikroOrmConfig),
+    MikroOrmModule.forRoot(mikroOrmConfig),  // importa a configuração do banco
     UserModule,
   ],
   controllers: [AppController],
