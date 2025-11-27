@@ -12,21 +12,21 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: SqlEntityRepository<User>,
-    private readonly em: EntityManager,                      
+    private readonly em: EntityManager,
   ) {}
 
-  private sanitizeUser(user: User) {
+  private sanitizeUser(user: User): Omit<User,'senha'> {
     const { senha, ...sanitized } = user;
     return sanitized;
   }
 
-  private hashPassword(senha: string) {
+  private hashPassword(senha: string): string {
     const salt = randomBytes(16).toString('hex');
     const hash = scryptSync(senha, salt, 64).toString('hex');
     return `${salt}:${hash}`;
   }
 
-  private isPasswordValid(rawPassword: string, storedPassword: string) {
+  private isPasswordValid(rawPassword: string, storedPassword: string): boolean {
     const [salt, storedHash] = storedPassword.split(':');
     const hash = scryptSync(rawPassword, salt, 64).toString('hex');
     return timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(storedHash, 'hex'));
@@ -37,7 +37,7 @@ export class UserService {
     const user = this.userRepository.create({
       ...createUserDto,
       senha: senhaHash,
-      nivel_acesso: '0'
+      nivel_acesso: '0',
     });
 
     await this.em.persistAndFlush(user);
@@ -45,8 +45,7 @@ export class UserService {
     return this.sanitizeUser(user);
   }
 
-  async login(loginUserDto: LoginUserDto) 
-  {
+  async login(loginUserDto: LoginUserDto) {
     const user = await this.userRepository.findOne({ email: loginUserDto.email });
 
     if (!user) {
@@ -64,7 +63,7 @@ export class UserService {
 
   async findAll() {
     const users = await this.userRepository.findAll();
-    return users.map((user) => this.sanitizeUser(user))
+    return users.map((user) => this.sanitizeUser(user));
   }
 
   async findOne(id: number) {
